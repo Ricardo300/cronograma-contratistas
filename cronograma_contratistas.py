@@ -22,6 +22,7 @@ usuarios = {
     "cyr": {"password": "Cyrinst2026*", "rol": "contratista", "contrata": "CYR"},
     "JLC": {"password": "1234", "rol": "contratista", "contrata": "JLC"},
     "rvargas": {"password": "Rvargas2023", "rol": "contratista", "contrata": "RVARGAS SUPPLY S.A"},
+    "gperez": {"password": "1234*", "rol": "contratista", "contrata": "TECNO SOLUCIONES GP"},
     "innovaciones_sym": {"password": "Innovaciones123*", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
     "internos_carso": {"password": "InternosCarso1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
