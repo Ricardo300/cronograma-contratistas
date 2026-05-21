@@ -19,7 +19,7 @@ usuarios = {
     "dqr": {"password": "dqr0202", "rol": "contratista", "contrata": "DQR TECHNOLOGY"},
     "mase": {"password": "M@se1234", "rol": "contratista", "contrata": "GRUPO MASE"},
     "norember": {"password": "Nore1075", "rol": "contratista", "contrata": "NOREMBER"},
-    "cyr": {"password": "Cyr1234", "rol": "contratista", "contrata": "CYR"},
+    "cyr": {"password": "Cyrinst2026*", "rol": "contratista", "contrata": "CYR"},
     "JLC": {"password": "1234", "rol": "contratista", "contrata": "JLC"},
     "rvargas": {"password": "1234", "rol": "contratista", "contrata": "RVARGAS SUPPLY S.A"},
     "innovaciones_sym": {"password": "Innovaciones123*", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
