@@ -18,6 +18,7 @@ usuarios = {
     "gruposic": {"password": "Gruposic2026", "rol": "contratista", "contrata": "GRUPO SIC S.A"},
     "dqr": {"password": "dqr0202", "rol": "contratista", "contrata": "DQR TECHNOLOGY"},
     "mase": {"password": "M@se1234", "rol": "contratista", "contrata": "GRUPO MASE"},
+    "norember": {"password": "Nore1075", "rol": "contratista", "contrata": "NOREMBER"},
     "innovaciones_sym": {"password": "1234", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
     "internos_carso": {"password": "1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
