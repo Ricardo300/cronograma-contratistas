@@ -19,8 +19,11 @@ usuarios = {
     "dqr": {"password": "dqr0202", "rol": "contratista", "contrata": "DQR TECHNOLOGY"},
     "mase": {"password": "M@se1234", "rol": "contratista", "contrata": "GRUPO MASE"},
     "norember": {"password": "Nore1075", "rol": "contratista", "contrata": "NOREMBER"},
-    "innovaciones_sym": {"password": "1234", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
-    "internos_carso": {"password": "1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
+    "cyr": {"password": "Cyr1234", "rol": "contratista", "contrata": "CYR"},
+    "JLC": {"password": "1234", "rol": "contratista", "contrata": "JLC"},
+    "rvargas": {"password": "1234", "rol": "contratista", "contrata": "RVARGAS SUPPLY S.A"},
+    "innovaciones_sym": {"password": "Innovaciones123*", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
+    "internos_carso": {"password": "InternosCarso1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
 }
 
