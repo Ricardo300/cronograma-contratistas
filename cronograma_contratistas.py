@@ -13,7 +13,7 @@ usuarios = {
     "ricardo": {"password": "1234", "rol": "admin", "contrata": "Todas"},
     "jeffrey": {"password": "12345", "rol": "admin", "contrata": "Todas"},
     "hector": {"password": "123456", "rol": "admin", "contrata": "Todas"},
-    "soluciones_rg": {"password": "1234", "rol": "contratista", "contrata": "SOLUCIONES RG"},
+    "soluciones_rg": {"password": "Rgsoluciones26!", "rol": "contratista", "contrata": "SOLUCIONES RG"},
     "innovaciones_sym": {"password": "1234", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
     "internos_carso": {"password": "1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
