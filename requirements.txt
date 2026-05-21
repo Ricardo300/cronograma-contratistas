@@ -4,3 +4,4 @@ openpyxl
 supabase
 plotly
 streamlit-plotly-events
+streamlit-aggrid
