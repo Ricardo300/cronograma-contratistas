@@ -11,6 +11,7 @@ st.set_page_config(page_title="Cronograma Contratistas", layout="wide")
 
 usuarios = {
     "ricardo": {"password": "1234", "rol": "admin", "contrata": "Todas"},
+    "breyssy": {"password": "Breylinda12", "rol": "admin", "contrata": "Todas"},
     "jeffrey": {"password": "12345", "rol": "admin", "contrata": "Todas"},
     "hector": {"password": "123456", "rol": "admin", "contrata": "Todas"},
     "soluciones_rg": {"password": "Rgsoluciones26!", "rol": "contratista", "contrata": "SOLUCIONES RG"},
