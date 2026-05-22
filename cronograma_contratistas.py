@@ -26,7 +26,7 @@ usuarios = {
     "innovaciones_sym": {"password": "Innovaciones123*", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
     "internos_carso": {"password": "InternosCarso1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
-    "lectura": {"password": "Lectura2026", "rol": "lectura", "contrata": "Todas"},
+    "BackOffice": {"password": "Bo2026*", "rol": "lectura", "contrata": "Todas"},
 }
 
 if "logueado" not in st.session_state:
