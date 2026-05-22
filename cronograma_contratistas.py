@@ -377,6 +377,7 @@ def obtener_estado(df_rol, codigo, dia):
 
     return fila.iloc[0]["estado_rol"]
 
+
 def convertir_excel(df):
     output = BytesIO()
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
@@ -550,9 +551,13 @@ for _, tecnico in df_tecnicos.iterrows():
 
 df_tablero = pd.DataFrame(filas)
 
+if df_tablero.empty:
+    st.warning("No hay técnicos activos para los filtros seleccionados.")
+    st.stop()
+
 
 # ==========================================
-# BOTONES ARRIBA
+# PERMISOS
 # ==========================================
 rol_usuario = st.session_state.get("rol")
 
@@ -562,66 +567,129 @@ es_lectura = rol_usuario == "lectura"
 
 puede_editar = rol_usuario in ["admin", "contratista"]
 
+
+# ==========================================
+# BOTONES ARRIBA
+# ==========================================
 if semana_cerrada:
-    col_btn1, col_btn2, col_btn3, col_btn4 = st.columns([1.4, 1.3, 1.3, 1.5])
+    if puede_editar:
+        col_btn1, col_btn2, col_btn3 = st.columns([1.4, 1.3, 1.5])
+    else:
+        col_btn2, col_btn3 = st.columns([1.3, 1.5])
 else:
     if es_admin:
         col_btn1, col_btn2, col_btn3, col_btn4, col_btn5 = st.columns(
             [1.4, 1.7, 1.3, 1.3, 1.5]
         )
+    elif puede_editar:
+        col_btn1, col_btn4, col_btn5 = st.columns(
+            [1.4, 1.3, 1.5]
+        )
     else:
-        col_btn1, col_btn3, col_btn4, col_btn5 = st.columns(
-            [1.4, 1.3, 1.3, 1.5]
+        col_btn4, col_btn5 = st.columns(
+            [1.3, 1.5]
         )
 
-with col_btn1:
-    guardar = st.button(
-        "💾 Guardar cambios",
-        type="primary",
-        use_container_width=True
-    )
+if puede_editar:
+    with col_btn1:
+        guardar = st.button(
+            "💾 Guardar cambios",
+            type="primary",
+            use_container_width=True
+        )
+else:
+    guardar = False
 
 if not semana_cerrada and es_admin:
-
     with col_btn2:
         cerrar_semana = st.button(
             "🔒 Cerrar semana oficial",
             use_container_width=True
         )
-
 else:
     cerrar_semana = False
 
-with col_btn3:
-    reiniciar = st.button(
-        "♻️ Reiniciar semana",
-        use_container_width=True
-    )
-
-with col_btn4:
-    actualizar = st.button(
-        "🔄 Actualizar",
-        use_container_width=True
-    )
-
-if semana_cerrada:
-    with col_btn4:
-        st.download_button(
-            label="📥 Exportar Excel",
-            data=convertir_excel(df_tablero),
-            file_name=f"cronograma_semana_{semana}_{año}.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+if es_admin and not semana_cerrada:
+    with col_btn3:
+        reiniciar = st.button(
+            "♻️ Reiniciar semana",
             use_container_width=True
         )
 else:
-    with col_btn5:
-        st.download_button(
-            label="📥 Exportar Excel",
-            data=convertir_excel(df_tablero),
-            file_name=f"cronograma_semana_{semana}_{año}.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            use_container_width=True
-        )
+    reiniciar = False
+
+if semana_cerrada:
+    if puede_editar:
+        with col_btn2:
+            actualizar = st.button(
+                "🔄 Actualizar",
+                use_container_width=True
+            )
+        with col_btn3:
+            st.download_button(
+                label="📥 Exportar Excel",
+                data=convertir_excel(df_tablero),
+                file_name=f"cronograma_semana_{semana}_{año}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+    else:
+        with col_btn2:
+            actualizar = st.button(
+                "🔄 Actualizar",
+                use_container_width=True
+            )
+        with col_btn3:
+            st.download_button(
+                label="📥 Exportar Excel",
+                data=convertir_excel(df_tablero),
+                file_name=f"cronograma_semana_{semana}_{año}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+else:
+    if es_admin:
+        with col_btn4:
+            actualizar = st.button(
+                "🔄 Actualizar",
+                use_container_width=True
+            )
+        with col_btn5:
+            st.download_button(
+                label="📥 Exportar Excel",
+                data=convertir_excel(df_tablero),
+                file_name=f"cronograma_semana_{semana}_{año}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+    elif puede_editar:
+        with col_btn4:
+            actualizar = st.button(
+                "🔄 Actualizar",
+                use_container_width=True
+            )
+        with col_btn5:
+            st.download_button(
+                label="📥 Exportar Excel",
+                data=convertir_excel(df_tablero),
+                file_name=f"cronograma_semana_{semana}_{año}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+    else:
+        with col_btn4:
+            actualizar = st.button(
+                "🔄 Actualizar",
+                use_container_width=True
+            )
+        with col_btn5:
+            st.download_button(
+                label="📥 Exportar Excel",
+                data=convertir_excel(df_tablero),
+                file_name=f"cronograma_semana_{semana}_{año}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
 
 
 st.markdown("### 📌 Resumen de la semana")
@@ -698,7 +766,7 @@ function(params) {
 for nombre_columna in nombres_dias:
     gb.configure_column(
         nombre_columna,
-        editable=True,
+        editable=puede_editar,
         cellEditor='agSelectCellEditor',
         cellEditorParams={'values': estados},
         cellStyle=cellstyle_jscode,
@@ -714,6 +782,9 @@ gb.configure_default_column(
 gridOptions = gb.build()
 
 st.markdown("### 👷 Tablero editable")
+
+if not puede_editar:
+    st.info("Modo solo lectura: puedes consultar y exportar, pero no modificar el cronograma.")
 
 grid_response = AgGrid(
     df_tablero,
@@ -813,53 +884,39 @@ if guardar:
 
 
 if cerrar_semana:
-    if semana_cerrada:
+    cerrar_semana_oficial(lunes, domingo)
+
+    correo_ok, error_correo = enviar_correo_cierre_semana(
+        semana,
+        lunes,
+        domingo
+    )
+
+    if correo_ok:
         abrir_modal(
-            "warning",
-            "Semana ya cerrada",
-            "Esta semana ya está cerrada oficialmente."
+            "success",
+            "Semana cerrada",
+            "El cronograma quedó cerrado oficialmente y se envió el correo."
         )
     else:
-        cerrar_semana_oficial(lunes, domingo)
-
-        correo_ok, error_correo = enviar_correo_cierre_semana(
-            semana,
-            lunes,
-            domingo
+        abrir_modal(
+            "warning",
+            "Semana cerrada",
+            f"El cronograma quedó cerrado oficialmente, pero falló el correo: {error_correo}"
         )
 
-        if correo_ok:
-            abrir_modal(
-                "success",
-                "Semana cerrada",
-                "El cronograma quedó cerrado oficialmente y se envió el correo."
-            )
-        else:
-            abrir_modal(
-                "warning",
-                "Semana cerrada",
-                f"El cronograma quedó cerrado oficialmente, pero falló el correo: {error_correo}"
-            )
-
-        st.cache_data.clear()
+    st.cache_data.clear()
 
 
 if reiniciar:
-    if semana_cerrada:
-        abrir_modal(
-            "warning",
-            "Acción bloqueada",
-            "No se puede reiniciar una semana cerrada."
-        )
-    else:
-        reiniciar_semana(lunes, domingo)
-        st.cache_data.clear()
+    reiniciar_semana(lunes, domingo)
+    st.cache_data.clear()
 
-        abrir_modal(
-            "success",
-            "Semana reiniciada",
-            "Todos los técnicos quedaron en Trabaja."
-        )
+    abrir_modal(
+        "success",
+        "Semana reiniciada",
+        "Todos los técnicos quedaron en Trabaja."
+    )
 
 
 if actualizar:
