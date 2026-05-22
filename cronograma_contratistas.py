@@ -198,11 +198,17 @@ Cambios realizados:
             st.secrets["EMAIL_PASSWORD"]
         )
 
-        servidor.sendmail(
-            st.secrets["EMAIL_FROM"],
-            destinatarios,
-            mensaje.as_string()
-        )
+        for destinatario in destinatarios:
+
+            mensaje["To"] = destinatario
+
+            servidor.sendmail(
+                st.secrets["EMAIL_FROM"],
+                destinatario,
+                mensaje.as_string()
+            )
+
+            del mensaje["To"]
 
         servidor.quit()
 
@@ -210,7 +216,6 @@ Cambios realizados:
 
     except Exception as e:
         return False, str(e)
-
 
 def enviar_correo_cierre_semana(semana, lunes, domingo):
     try:
@@ -234,7 +239,6 @@ A partir de este momento, cualquier cambio posterior quedará pendiente de valid
         mensaje = MIMEText(cuerpo, "plain", "utf-8")
         mensaje["Subject"] = f"Cronograma oficial cerrado - Semana {semana}"
         mensaje["From"] = st.secrets["EMAIL_FROM"]
-        mensaje["To"] = ", ".join(destinatarios)
 
         servidor = smtplib.SMTP(
             st.secrets["EMAIL_HOST"],
@@ -247,11 +251,17 @@ A partir de este momento, cualquier cambio posterior quedará pendiente de valid
             st.secrets["EMAIL_PASSWORD"]
         )
 
-        servidor.sendmail(
-            st.secrets["EMAIL_FROM"],
-            destinatarios,
-            mensaje.as_string()
-        )
+        for destinatario in destinatarios:
+
+            mensaje["To"] = destinatario
+
+            servidor.sendmail(
+                st.secrets["EMAIL_FROM"],
+                destinatario,
+                mensaje.as_string()
+            )
+
+            del mensaje["To"]
 
         servidor.quit()
 
@@ -259,7 +269,6 @@ A partir de este momento, cualquier cambio posterior quedará pendiente de valid
 
     except Exception as e:
         return False, str(e)
-
 
 @st.cache_data(ttl=300)
 def cargar_tecnicos():
