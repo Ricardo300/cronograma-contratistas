@@ -521,6 +521,7 @@ nombres_dias = [
 
 estados = [
     "Trabaja",
+    "trabaja Mediodía",
     "Libre",
     "Vacaciones",
     "Incapacidad",
@@ -714,6 +715,7 @@ st.markdown("""
     font-size:18px;
 ">
     <span>🟢 Trabaja</span>
+    <span>🟩 Trabaja medio día</span>
     <span>🟡 Libre</span>
     <span>🔵 Vacaciones</span>
     <span>🟣 Incapacidad</span>
@@ -734,6 +736,10 @@ function(params) {
 
     if (params.value == 'Trabaja') {
         return {'backgroundColor': '#2E7D32', 'color': 'white', 'fontWeight': 'bold', 'textAlign': 'center'}
+    }
+                          
+    if (params.value == 'Trabaja medio día') {
+    return {'backgroundColor': '#66BB6A', 'color': 'white', 'fontWeight': 'bold', 'textAlign': 'center'}
     }
 
     if (params.value == 'Libre') {
