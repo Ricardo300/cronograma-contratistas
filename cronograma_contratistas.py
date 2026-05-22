@@ -182,33 +182,29 @@ Cambios realizados:
             else f"Cambio cronograma - Semana {semana}"
         )
 
-        mensaje = MIMEText(cuerpo, "plain", "utf-8")
-        mensaje["Subject"] = asunto
-        mensaje["From"] = st.secrets["EMAIL_FROM"]
-        mensaje["To"] = ", ".join(destinatarios)
-
         servidor = smtplib.SMTP(
             st.secrets["EMAIL_HOST"],
             st.secrets["EMAIL_PORT"]
         )
 
         servidor.starttls()
+
         servidor.login(
             st.secrets["EMAIL_USER"],
             st.secrets["EMAIL_PASSWORD"]
         )
 
         for destinatario in destinatarios:
-
-            mensaje["To"] = destinatario
+            mensaje_individual = MIMEText(cuerpo, "plain", "utf-8")
+            mensaje_individual["Subject"] = asunto
+            mensaje_individual["From"] = st.secrets["EMAIL_FROM"]
+            mensaje_individual["To"] = destinatario
 
             servidor.sendmail(
                 st.secrets["EMAIL_FROM"],
                 destinatario,
-                mensaje.as_string()
+                mensaje_individual.as_string()
             )
-
-            del mensaje["To"]
 
         servidor.quit()
 
@@ -216,6 +212,7 @@ Cambios realizados:
 
     except Exception as e:
         return False, str(e)
+
 
 def enviar_correo_cierre_semana(semana, lunes, domingo):
     try:
@@ -236,9 +233,7 @@ Cerrado por: {usuario}
 A partir de este momento, cualquier cambio posterior quedará pendiente de validación.
 """
 
-        mensaje = MIMEText(cuerpo, "plain", "utf-8")
-        mensaje["Subject"] = f"Cronograma oficial cerrado - Semana {semana}"
-        mensaje["From"] = st.secrets["EMAIL_FROM"]
+        asunto = f"Cronograma oficial cerrado - Semana {semana}"
 
         servidor = smtplib.SMTP(
             st.secrets["EMAIL_HOST"],
@@ -246,22 +241,23 @@ A partir de este momento, cualquier cambio posterior quedará pendiente de valid
         )
 
         servidor.starttls()
+
         servidor.login(
             st.secrets["EMAIL_USER"],
             st.secrets["EMAIL_PASSWORD"]
         )
 
         for destinatario in destinatarios:
-
-            mensaje["To"] = destinatario
+            mensaje_individual = MIMEText(cuerpo, "plain", "utf-8")
+            mensaje_individual["Subject"] = asunto
+            mensaje_individual["From"] = st.secrets["EMAIL_FROM"]
+            mensaje_individual["To"] = destinatario
 
             servidor.sendmail(
                 st.secrets["EMAIL_FROM"],
                 destinatario,
-                mensaje.as_string()
+                mensaje_individual.as_string()
             )
-
-            del mensaje["To"]
 
         servidor.quit()
 
@@ -269,6 +265,7 @@ A partir de este momento, cualquier cambio posterior quedará pendiente de valid
 
     except Exception as e:
         return False, str(e)
+
 
 @st.cache_data(ttl=300)
 def cargar_tecnicos():
@@ -530,7 +527,7 @@ nombres_dias = [
 
 estados = [
     "Trabaja",
-    "trabaja Mediodía",
+    "Trabaja medio día",
     "Libre",
     "Vacaciones",
     "Incapacidad",
@@ -746,9 +743,9 @@ function(params) {
     if (params.value == 'Trabaja') {
         return {'backgroundColor': '#2E7D32', 'color': 'white', 'fontWeight': 'bold', 'textAlign': 'center'}
     }
-                          
+
     if (params.value == 'Trabaja medio día') {
-    return {'backgroundColor': '#66BB6A', 'color': 'white', 'fontWeight': 'bold', 'textAlign': 'center'}
+        return {'backgroundColor': '#66BB6A', 'color': 'white', 'fontWeight': 'bold', 'textAlign': 'center'}
     }
 
     if (params.value == 'Libre') {
