@@ -26,6 +26,7 @@ usuarios = {
     "innovaciones_sym": {"password": "Innovaciones123*", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
     "internos_carso": {"password": "InternosCarso1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
+    "lectura": {"password": "Lectura2026", "rol": "lectura", "contrata": "Todas"},
 }
 
 if "logueado" not in st.session_state:
@@ -553,7 +554,13 @@ df_tablero = pd.DataFrame(filas)
 # ==========================================
 # BOTONES ARRIBA
 # ==========================================
-es_admin = st.session_state.get("rol") == "admin"
+rol_usuario = st.session_state.get("rol")
+
+es_admin = rol_usuario == "admin"
+es_supervisor = rol_usuario == "supervisor"
+es_lectura = rol_usuario == "lectura"
+
+puede_editar = rol_usuario in ["admin", "contratista"]
 
 if semana_cerrada:
     col_btn1, col_btn2, col_btn3, col_btn4 = st.columns([1.4, 1.3, 1.3, 1.5])
