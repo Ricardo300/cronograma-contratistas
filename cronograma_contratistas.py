@@ -313,6 +313,22 @@ def cargar_semana_rol(fecha_inicio, fecha_fin):
     return {"estado_semana": "BORRADOR"}
 
 
+def semana_cerrada_por_fecha(fecha_afectada):
+    response = (
+        supabase
+        .schema("cronograma")
+        .table("semanas_rol")
+        .select("estado_semana")
+        .lte("semana_inicio", str(fecha_afectada))
+        .gte("semana_fin", str(fecha_afectada))
+        .eq("estado_semana", "CERRADA")
+        .limit(1)
+        .execute()
+    )
+
+    return bool(response.data)
+
+
 def cerrar_semana_oficial(fecha_inicio, fecha_fin):
     usuario = st.session_state.get("usuario", "sistema")
 
@@ -343,7 +359,28 @@ def guardar_estado(codigo_tecnico, fecha, estado_rol):
     ).execute()
 
 
+def existe_historial_cambio(cambio):
+    response = (
+        supabase
+        .schema("cronograma")
+        .table("historial_cambios_rol")
+        .select("id")
+        .eq("codigo_tecnico", cambio["tecnico"])
+        .eq("fecha_afectada", cambio["fecha_afectada"])
+        .eq("estado_anterior", cambio["estado_anterior"])
+        .eq("estado_nuevo", cambio["estado_nuevo"])
+        .eq("usuario_cambio", st.session_state.get("usuario", "sistema"))
+        .limit(1)
+        .execute()
+    )
+
+    return bool(response.data)
+
+
 def registrar_historial_cambio(cambio, correo_enviado):
+    if existe_historial_cambio(cambio):
+        return False
+
     data = {
         "codigo_tecnico": cambio["tecnico"],
         "fecha_afectada": cambio["fecha_afectada"],
@@ -360,6 +397,7 @@ def registrar_historial_cambio(cambio, correo_enviado):
     }
 
     supabase.schema("cronograma").table("historial_cambios_rol").insert(data).execute()
+    return True
 
 
 def reiniciar_semana(fecha_inicio, fecha_fin):
@@ -815,6 +853,8 @@ df_editado = pd.DataFrame(grid_response["data"])
 
 if guardar:
     lista_cambios = []
+    lista_cambios_semana_cerrada = []
+    lista_cambios_registrados = []
 
     for _, fila_editada in df_editado.iterrows():
         codigo = fila_editada["Tecnico"]
@@ -834,14 +874,16 @@ if guardar:
             estado_nuevo = fila_editada[nombre_dia]
 
             if estado_anterior != estado_nuevo:
-                lista_cambios.append({
+                cambio = {
                     "tecnico": codigo,
                     "contrata": contrata,
                     "dia": nombre_dia,
                     "fecha_afectada": str(dia),
                     "estado_anterior": estado_anterior,
                     "estado_nuevo": estado_nuevo
-                })
+                }
+
+                lista_cambios.append(cambio)
 
                 guardar_estado(
                     codigo,
@@ -849,34 +891,58 @@ if guardar:
                     estado_nuevo
                 )
 
+                if semana_cerrada_por_fecha(dia):
+                    lista_cambios_semana_cerrada.append(cambio)
+
     if lista_cambios:
 
-        if semana_cerrada:
-            correo_ok, error_correo = enviar_correo_cambios(
-                lista_cambios,
-                semana,
-                lunes,
-                domingo,
-                semana_cerrada=True
-            )
+        if lista_cambios_semana_cerrada:
 
-            for cambio in lista_cambios:
-                registrar_historial_cambio(
+            for cambio in lista_cambios_semana_cerrada:
+                registrado = registrar_historial_cambio(
                     cambio,
-                    correo_ok
+                    False
                 )
 
-            if correo_ok:
-                abrir_modal(
-                    "warning",
-                    "Cambio posterior cierre",
-                    f"Se guardaron {len(lista_cambios)} cambio(s), quedaron pendientes de validación y se envió el correo."
+                if registrado:
+                    lista_cambios_registrados.append(cambio)
+
+            if lista_cambios_registrados:
+                correo_ok, error_correo = enviar_correo_cambios(
+                    lista_cambios_registrados,
+                    semana,
+                    lunes,
+                    domingo,
+                    semana_cerrada=True
                 )
+
+                for cambio in lista_cambios_registrados:
+                    supabase.schema("cronograma").table("historial_cambios_rol") \
+                        .update({"correo_enviado": correo_ok}) \
+                        .eq("codigo_tecnico", cambio["tecnico"]) \
+                        .eq("fecha_afectada", cambio["fecha_afectada"]) \
+                        .eq("estado_anterior", cambio["estado_anterior"]) \
+                        .eq("estado_nuevo", cambio["estado_nuevo"]) \
+                        .eq("usuario_cambio", st.session_state.get("usuario", "sistema")) \
+                        .execute()
+
+                if correo_ok:
+                    abrir_modal(
+                        "warning",
+                        "Cambio posterior cierre",
+                        f"Se guardaron {len(lista_cambios)} cambio(s). {len(lista_cambios_registrados)} quedaron pendientes de validación y se envió el correo."
+                    )
+                else:
+                    abrir_modal(
+                        "warning",
+                        "Cambio posterior cierre",
+                        f"Se guardaron {len(lista_cambios)} cambio(s). {len(lista_cambios_registrados)} quedaron pendientes de validación, pero falló el correo: {error_correo}"
+                    )
             else:
                 abrir_modal(
                     "warning",
-                    "Cambio posterior cierre",
-                    f"Se guardaron {len(lista_cambios)} cambio(s), quedaron pendientes de validación, pero falló el correo: {error_correo}"
+                    "Cambios ya registrados",
+                    f"Se guardaron {len(lista_cambios)} cambio(s), pero ya existían en validación. No se duplicaron."
                 )
 
         else:
