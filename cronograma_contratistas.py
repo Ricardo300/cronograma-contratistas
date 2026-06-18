@@ -25,7 +25,7 @@ usuarios = {
     "gperez": {"password": "Gperez2026*", "rol": "contratista", "contrata": "TECNO SOLUCIONES GP"},
     "innovaciones_sym": {"password": "Innovaciones123*", "rol": "contratista", "contrata": "INNOVACIONES SYM S.A"},
     "internos_carso": {"password": "InternosCarso1234", "rol": "contratista", "contrata": "INTERNOS CARSO"},
-    "global": {"password": "Global2026*", "rol": "contratista", "contrata": "INTERNOS CARSO"},
+    "global": {"password": "Global2026*", "rol": "contratista", "contrata": "GLOBAL SATALITE"},
     "supervisor": {"password": "abcd", "rol": "supervisor", "contrata": "Todas"},
     "backoffice": {"password": "Bo2026*", "rol": "lectura", "contrata": "Todas"},
 }
